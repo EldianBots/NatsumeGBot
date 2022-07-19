@@ -25,10 +25,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 from Shikimori import telethn
-from Shikimori.events import register as tomori
+from Shikimori.events import register
 
 
-@tomori(pattern="^/(all|mentionall|tagall|utag) ?(.*)")
+@register(pattern="^/(all|mentionall|tagall|utag) ?(.*)")
 async def _(event):
     if event.fwd_from:
         return
@@ -39,7 +39,7 @@ async def _(event):
     await event.reply(mentions)
     await event.delete()
 
-@tomori(pattern="^@(all|mentionall|tagall|utag) ?(.*)")
+@register(pattern="^@(all|mentionall|tagall|utag) ?(.*)")
 async def _(event):
     if event.fwd_from:
         return
@@ -51,7 +51,7 @@ async def _(event):
     await event.delete()
 
 
-# @tomori(pattern="^/users ?(.*)")
+# @register(pattern="^/users ?(.*)")
 # async def _(event):
 #     if event.fwd_from:
 #         return

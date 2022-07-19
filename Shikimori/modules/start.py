@@ -25,8 +25,10 @@ import time
 import re
 from Shikimori.__main__ import HELPABLE, IMPORTED, USER_SETTINGS, CHAT_SETTINGS
 from Shikimori.modules.helper_funcs.readable_time import get_readable_time
+import Shikimori.modules.sql.users_sql as sql
 from Shikimori import (
     BOT_USERNAME,
+    LOG_CHANNEL,
     UPDATE_CHANNEL,
     SUPPORT_CHAT,
     dispatcher,
@@ -45,10 +47,18 @@ bot_name = f"{dispatcher.bot.first_name}"
 IMG_START = START_MEDIA.split(".")
 start_id = IMG_START[-1]
 
-PM_START_TEXT = f"""
-\nI am *{bot_name}* , a group management bot based on the anime *{ANIME_NAME}*![ ]({START_MEDIA})
+PM_START_TEXT = """
+*────「 Natsume 」────*
 
-*Click on the Commands Button below to go through my commands.*
+*What's poppin [{}]((tg://user?id={}))!! I am *Natsume* an awesome *Hentai Themed Bot* with tons of unique features and fun modules ! Bash that help button below read all my commands.
+
+__××Users: {}
+××Chats: {}
+××Uptime: {}__
+
+`Now stop reading and fricking add me to your chat and check yourself >.<`
+
+××××××××××××××××××××××××
 """
 
 HELP_STRINGS = """
@@ -60,14 +70,14 @@ buttons = [
             text=f" Add {bot_name} to your Group", url=f"t.me/{BOT_USERNAME}?startgroup=true"),
     ],
     [
-        InlineKeyboardButton(text="❓About", callback_data="Shikimori_"),
-        InlineKeyboardButton(text=" 💬Commands", callback_data="help_back"),
-    ],
-    [
-        InlineKeyboardButton(text="🚨Support Grp", url=f"https://t.me/{SUPPORT_CHAT}"),
-        InlineKeyboardButton(text="❗Updates", url=f"https://t.me/{UPDATE_CHANNEL}"),
+        InlineKeyboardButton(text="💢 Support 💢", url=f"https://t.me/{SUPPORT_CHAT}"),
+        InlineKeyboardButton(text="🗞 Updates 🗞", url=f"https://t.me/{UPDATE_CHANNEL}"),
    
     ], 
+    [
+        InlineKeyboardButton(text="📑 Logs 📑", url=f"https://t.me/{LOG_CHANNEL}"),
+        InlineKeyboardButton(text="🗯 Chat Group 🗯", url="https://t.me/culturedbakas"),
+    ],
 ]
 
 def start(update: Update, context: CallbackContext):
@@ -102,9 +112,9 @@ def start(update: Update, context: CallbackContext):
                 IMPORTED["rules"].send_rules(update, args[0], from_pm=True)
 
         else:
+            user_id = update.effective_user.id
             first_name = update.effective_user.first_name
-            hmm = "Hello *{}*! Nice to meet you!".format(escape_markdown(first_name))
-            HMM = hmm + PM_START_TEXT
+            HMM = PM_START_TEXT.format(escape_markdown(first_name), user_id, sql.num_users(),sql.num_chats(), uptime)
 
             update.effective_message.reply_text(
                 HMM,                        
@@ -116,14 +126,14 @@ def start(update: Update, context: CallbackContext):
     else:
         start_buttons = [
                  [
-                    InlineKeyboardButton(text="🚨Support Grp", url=f"https://t.me/{SUPPORT_CHAT}"),
-                    InlineKeyboardButton(text="❗Updates", url=f"https://t.me/{UPDATE_CHANNEL}")
+                    InlineKeyboardButton(text="💢 Support 💢", url=f"https://t.me/{SUPPORT_CHAT}"),
+                    InlineKeyboardButton(text="🗞 Updates 🗞", url=f"https://t.me/{UPDATE_CHANNEL}")
                  ]
                 ]
         chat_id = update.effective_chat.id
         first_name = update.effective_user.first_name
         chat_name = dispatcher.bot.getChat(chat_id).title
-        start_text= "*Hey {}, I'm here for you at {} since :* `{}`\n".format(escape_markdown(first_name), escape_markdown(chat_name), uptime)
+        start_text= "*Hey {}, I'm here for you at {} since :* `{}`\n".format(escape_markdown(first_name), chat_name, uptime)
         try:
             if start_id in ("jpeg", "jpg", "png"):
                 update.effective_message.reply_photo(

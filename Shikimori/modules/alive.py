@@ -21,6 +21,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
+import time
 from Shikimori import ALIVE_MEDIA, UPDATE_CHANNEL, SUPPORT_CHAT, OWNER_USERNAME, dispatcher, NETWORK, NETWORK_USERNAME
 from Shikimori.modules.disable import DisableAbleCommandHandler
 from telegram import ParseMode, Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -30,6 +31,35 @@ bot_name = f"{dispatcher.bot.first_name}"
 
 ALIVE_ID = ALIVE_MEDIA.split(".")
 alive_id = ALIVE_ID[-1]
+
+StartTime = time.time()
+
+def get_readable_time(seconds: int) -> str:
+    count = 0
+    ping_time = ""
+    time_list = []
+    time_suffix_list = ["s", "m", "h", "days"]
+
+    while count < 4:
+        count += 1
+        if count < 3:
+            remainder, result = divmod(seconds, 60)
+        else:
+            remainder, result = divmod(seconds, 24)
+        if seconds == 0 and remainder == 0:
+            break
+        time_list.append(int(result))
+        seconds = int(remainder)
+
+    for x in range(len(time_list)):
+        time_list[x] = str(time_list[x]) + time_suffix_list[x]
+    if len(time_list) == 4:
+        ping_time += time_list.pop() + ", "
+
+    time_list.reverse()
+    ping_time += ":".join(time_list)
+
+    return ping_time
 
 def awake(update: Update, context: CallbackContext):
     message = update.effective_message
@@ -46,19 +76,11 @@ def awake(update: Update, context: CallbackContext):
     
     first_name = update.effective_user.first_name
     user = message.from_user
+    uptime = get_readable_time((time.time() - StartTime))
 
     TEXT = f"""
-    <b>Hi <a href="tg://user?id={user.id}">{first_name}</a>, I'm {bot_name} Robot.
-
-⚪ I'm Working Properly
-
-⚪ My Owner : <a href="https://t.me/{OWNER_USERNAME}">{OWNER_USERNAME}</a></b>
+    <b>Baka</b><i> ~ I am alive haven't watched hentai since</i>: <code>{uptime}</code>  
     """
-    if NETWORK:
-        TEXT = TEXT + f'\n⚪ <b>I am Powered by : <a href="https://t.me/{NETWORK_USERNAME}">{NETWORK}</a>\n\n' + 'Thanks For Adding Me Here ❤️</b>'
-    
-    else:
-        TEXT = TEXT + "\n<b>Thanks For Adding Me Here ❤️</b>"
 
     try:
         if alive_id in ("jpeg", "jpg", "png"):

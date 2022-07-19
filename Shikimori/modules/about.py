@@ -26,14 +26,23 @@ from Shikimori.modules.helper_funcs.readable_time import get_readable_time
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ParseMode, Update
 from telegram.utils.helpers import escape_markdown
 from telegram.ext import CallbackContext, CallbackQueryHandler
-from Shikimori import ANIME_NAME, BOT_USERNAME, NETWORK, NETWORK_USERNAME, START_MEDIA, SUPPORT_CHAT, UPDATE_CHANNEL, StartTime, dispatcher
+from Shikimori import ANIME_NAME, BOT_USERNAME, LOG_CHANNEL, NETWORK, NETWORK_USERNAME, START_MEDIA, SUPPORT_CHAT, UPDATE_CHANNEL, StartTime, dispatcher
+import Shikimori.modules.sql.users_sql as sql
 
 bot_name = f"{dispatcher.bot.first_name}"
 
-PM_START_TEXT = f"""
-\nI am *{bot_name}* , a group management bot based on the anime *{ANIME_NAME}*![ ]({START_MEDIA})
+PM_START_TEXT = """
+*────「 Natsume 」────*
 
-*Click on the Commands Button below to go through my commands.*
+*What's poppin [{}]((tg://user?id={}))!! I am *Natsume* an awesome *Hentai Themed Bot* with tons of unique features and fun modules ! Bash that help button below read all my commands.
+
+__××Users: {}
+××Chats: {}
+××Uptime: {}__
+
+`Now stop reading and fricking add me to your chat and check yourself >.<`
+
+××××××××××××××××××××××××
 """
 
 buttons = [
@@ -42,25 +51,16 @@ buttons = [
             text=f" Add {bot_name} to your Group", url=f"t.me/{BOT_USERNAME}?startgroup=true"),
     ],
     [
-        InlineKeyboardButton(text="❓About", callback_data="Shikimori_"),
-        InlineKeyboardButton(text=" 💬Commands", callback_data="help_back"),
-    ],
-    [
-        InlineKeyboardButton(text="🚨Support Grp", url=f"https://t.me/{SUPPORT_CHAT}"),
-        InlineKeyboardButton(text="❗Updates", url=f"https://t.me/{UPDATE_CHANNEL}"),
+        InlineKeyboardButton(text="💢 Support 💢", url=f"https://t.me/{SUPPORT_CHAT}"),
+        InlineKeyboardButton(text="🗞 Updates 🗞", url=f"https://t.me/{UPDATE_CHANNEL}"),
    
     ], 
+    [
+        InlineKeyboardButton(text="📑 Logs 📑", url=f"https://t.me/{LOG_CHANNEL}"),
+        InlineKeyboardButton(text="🗯 Chat Group 🗯", url="https://t.me/culturedbakas"),
+    ],
 ]
 
-try:
-    if NETWORK_USERNAME == "VoidxNetwork":
-        HMMM = InlineKeyboardButton(text="【V๏ɪ፝֟𝔡】 ✧Network✧", callback_data="void_")
-    elif NETWORK:
-        HMMM = InlineKeyboardButton(text=f"{NETWORK}", url=f"https://t.me/{NETWORK_USERNAME}")
-    else:
-        HMMM = None
-except:
-    HMMM = None
 
 def Shikimori_about_callback(update, context):
     query = update.callback_query
@@ -82,7 +82,6 @@ def Shikimori_about_callback(update, context):
                     InlineKeyboardButton(text="License", callback_data="license_"),
                     ],
                     [
-                    HMMM,
                     InlineKeyboardButton(text="Documentation", url="https://some1hing.gitbook.io/shikimori-bot/"),
                     ],
                     [
@@ -95,8 +94,8 @@ def Shikimori_about_callback(update, context):
     elif query.data == "Shikimori_back":
         first_name = update.effective_user.first_name
         uptime = get_readable_time((time.time() - StartTime))
-        hmm = "Hello *{}*! Nice to meet you!".format(escape_markdown(first_name))
-        HMM = hmm + PM_START_TEXT
+        user_id = update.effective_user.id
+        HMM = PM_START_TEXT.format(escape_markdown(first_name), user_id, sql.num_users(),sql.num_chats(), uptime)
      
         query.message.edit_text(
                 HMM,
@@ -128,8 +127,8 @@ def git_call_back(update: Update, context: CallbackContext):
     elif query.data == "Shikimori_back":
         first_name = update.effective_user.first_name
         uptime = get_readable_time((time.time() - StartTime))
-        hmm = "Hello *{}*! Nice to meet you!".format(escape_markdown(first_name))
-        HMM = hmm + PM_START_TEXT
+        user_id = update.effective_user.id
+        HMM = PM_START_TEXT.format(escape_markdown(first_name), user_id, sql.num_users(),sql.num_chats(), uptime)
     
         query.message.edit_text(
                 HMM,
@@ -160,8 +159,8 @@ def void_call_back(update: Update, context: CallbackContext):
     elif query.data == "Shikimori_back":
         first_name = update.effective_user.first_name
         uptime = get_readable_time((time.time() - StartTime))
-        hmm = "Hello *{}*! Nice to meet you!".format(escape_markdown(first_name))
-        HMM = hmm + PM_START_TEXT
+        user_id = update.effective_user.id
+        HMM = PM_START_TEXT.format(escape_markdown(first_name), user_id, sql.num_users(),sql.num_chats(), uptime)
     
         query.message.edit_text(
                 HMM,
@@ -192,8 +191,8 @@ def license_call_back(update: Update, context: CallbackContext):
     elif query.data == "Shikimori_back":
         first_name = update.effective_user.first_name
         uptime = get_readable_time((time.time() - StartTime))
-        hmm = "Hello *{}*! Nice to meet you!".format(escape_markdown(first_name))
-        HMM = hmm + PM_START_TEXT
+        user_id = update.effective_user.id
+        HMM = PM_START_TEXT.format(escape_markdown(first_name), user_id, sql.num_users(),sql.num_chats(), uptime)
     
         query.message.edit_text(
                 HMM,
