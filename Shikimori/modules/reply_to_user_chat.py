@@ -55,6 +55,7 @@ __Remember Son , 3D is temporary 2D is eternal
         message.reply_text(reply)
 
     time.sleep(5)
+    message.delete()
 
 
 def natsume(update, context):
@@ -68,9 +69,10 @@ def natsume(update, context):
     message.reply_text(reply)
     
     time.sleep(5)
+    message.delete()
 
 GDMORNING_HANDLER = MessageHandler(
-    Filters.regex("(?i)(good morning|natsume)"), natsume, friendly="natsume", run_async = True
+    Filters.regex("(?i)(natsume)"), natsume, friendly="natsume", run_async = True
 )
 GDNIGHT_HANDLER = MessageHandler(
     Filters.regex("(?i)(hentai)"), hentai, friendly="hentai", run_async = True
