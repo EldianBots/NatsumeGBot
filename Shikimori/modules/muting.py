@@ -118,7 +118,13 @@ def mute(update: Update, context: CallbackContext) -> str:
         chat_permissions = ChatPermissions(can_send_messages=False)
         bot.restrict_chat_member(chat.id, user_id, chat_permissions)    
         msg = (
-            f"{mention_html(member.user.id, member.user.first_name)} [<code>{member.user.id}</code>] Is now 🔇 Muted."
+            f"""
+<b>Natsume rule - <code>01</code></b> 
+
+__People with small d!cks and t!ts and without adminship gets muted! __
+
+*Calm the hell down muted {mention_html(member.user.id, html.escape(member.user.first_name))} with no expiration date.*
+"""
             )
         if reason:
             msg += f"\nReason: {html.escape(reason)}"

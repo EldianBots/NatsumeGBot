@@ -25,153 +25,56 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # You are free to use this module. But don't delete this commented text. Thank you.
 
-from Shikimori import dispatcher, MEDIA_BYE, MEDIA_GM, MEDIA_GN, MEDIA_HELLO
+from Shikimori import dispatcher
 from telegram import ParseMode
+import Shikimori.modules.sql.chatbot_sql as sql
 from telegram.ext import Filters, MessageHandler
 import time
 
-IMG_GM = MEDIA_GM.split(".")
-gm_id = IMG_GM[-1]
+HENTAI_IMG = "https://telegra.ph/file/6d738a1d8ccd71a3813bd.jpg"
 
-IMG_GN = MEDIA_GM.split(".")
-gn_id = IMG_GN[-1]
-
-IMG_HELLO = MEDIA_GM.split(".")
-hello_id = IMG_HELLO[-1]
-
-IMG_BYE = MEDIA_BYE.split(".")
-bye_id = IMG_BYE[-1]
-
-def goodnight(update, context):
+def hentai(update, context):
     message = update.effective_message
     user1 = message.from_user.first_name
+    chat_id = update.effective_chat.id
+    is_kuki = sql.is_kuki(chat_id)
+    if not is_kuki:
+        return
     try:
-        if gn_id in ("jpeg", "jpg", "png"):
-            update.effective_message.reply_photo(
-            MEDIA_GN, caption = f"*Good Night:* {user1}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        elif gn_id in ("mp4", "mkv"):
-            update.effective_message.reply_video(
-            MEDIA_GN, caption = f"*Good Night:* {user1}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        elif gn_id in ("gif", "webp"):
-            update.effective_message.reply_animation(
-            MEDIA_GN, caption = f"*Good Night:* {user1}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        else:
-            reply = f"*Good Night:* {user1}"
-            message.reply_text(reply)
+        reply = """
+__Remember Son , 3D is temporary 2D is eternal 
+                                        ~ *Natsume*__
+                                               """
+        message.reply_photo( HENTAI_IMG, reply)
 
     except:
-        reply = f"*Good Night:* {user1}"
+        reply = """
+__Remember Son , 3D is temporary 2D is eternal 
+                                        ~ *Natsume*__
+                                               """
         message.reply_text(reply)
 
     time.sleep(5)
 
 
-def goodmorning(update, context):
+def natsume(update, context):
     message = update.effective_message
     user1 = message.from_user.first_name
-    try:
-        if gm_id in ("jpeg", "jpg", "png"):
-            update.effective_message.reply_photo(
-            MEDIA_GM, caption = f"*Good Morning:* {user1}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        elif gm_id in ("mp4", "mkv"):
-            update.effective_message.reply_video(
-            MEDIA_GM, caption = f"*Good Morning:* {user1}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        elif gm_id in ("gif", "webp"):
-            update.effective_message.reply_animation(
-            MEDIA_GM, caption = f"*Good Morning:* {user1}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        else:
-            reply = f"*Good Morning:* {user1}"
-            message.reply_text(reply)
-    except:
-        reply = f"*Good Morning:* {user1}"
-        message.reply_text(reply)
+    chat_id = update.effective_chat.id
+    is_kuki = sql.is_kuki(chat_id)
+    if not is_kuki:
+        return
+    reply = f"Ah stop calling me.. let me read douji- I mean biology in peace :'("
+    message.reply_text(reply)
     
     time.sleep(5)
-
-def hello(update, context):
-    message = update.effective_message
-    user1 = message.from_user.first_name
-    try:
-        if gm_id in ("jpeg", "jpg", "png"):
-            update.effective_message.reply_photo(
-            MEDIA_HELLO, caption = f"*Hello* {user1}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        elif gm_id in ("mp4", "mkv"):
-            update.effective_message.reply_video(
-            MEDIA_HELLO, caption = f"*Hello* {user1}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        elif gm_id in ("gif", "webp"):
-            update.effective_message.reply_animation(
-            MEDIA_HELLO, caption = f"*Hello* {user1}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        else:
-            reply = f"*Hello* {user1}"
-            message.reply_text(reply)
-    except:
-        reply = f"*Hello* {user1}"
-        message.reply_text(reply)
-
-    time.sleep(5)
-
-def bye(update, context):
-    message = update.effective_message
-    user1 = message.from_user.first_name
-    try:
-        if bye_id in ("jpeg", "jpg", "png"):
-            update.effective_message.reply_photo(
-            MEDIA_BYE, caption = f"*Bye!!* {user1}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        elif bye_id in ("mp4", "mkv"):
-            update.effective_message.reply_video(
-            MEDIA_BYE, caption = f"*Bye!!* {user1}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        elif bye_id in ("gif", "webp"):
-            update.effective_message.reply_animation(
-            MEDIA_BYE, caption = f"*Bye!!* {user1}",
-            parse_mode=ParseMode.MARKDOWN,
-        )
-        else:
-            reply = f"*Bye!!* {user1}"
-            message.reply_text(reply)
-    except:
-        reply = f"*Bye!!* {user1}"
-        message.reply_text(reply)
-    
-    time.sleep(5)
-
-
 
 GDMORNING_HANDLER = MessageHandler(
-    Filters.regex("(?i)(good morning|goodmorning)"), goodmorning, friendly="goodmorning", run_async = True
+    Filters.regex("(?i)(good morning|natsume)"), natsume, friendly="natsume", run_async = True
 )
 GDNIGHT_HANDLER = MessageHandler(
-    Filters.regex("(?i)(good night|goodnight)"), goodnight, friendly="goodnight", run_async = True
-)
-BYE_HANDLER = MessageHandler(
-    Filters.regex("(?i)(bye|brb|afk)"), bye, friendly="bye", run_async = True
-)
-HELLO_HANDLER = MessageHandler(
-    Filters.regex("(?i)(hello)"), hello, friendly="hello", run_async = True
+    Filters.regex("(?i)(hentai)"), hentai, friendly="hentai", run_async = True
 )
 
 dispatcher.add_handler(GDMORNING_HANDLER)
 dispatcher.add_handler(GDNIGHT_HANDLER)
-dispatcher.add_handler(HELLO_HANDLER)
-dispatcher.add_handler(BYE_HANDLER)

@@ -158,7 +158,13 @@ def ban(update: Update, context: CallbackContext) -> str:
 
         # bot.send_sticker(chat.id, BAN_STICKER)  # banhammer marie sticker
         reply = (
-            f"{mention_html(member.user.id, html.escape(member.user.first_name))} [<code>{member.user.id}</code>] Banned."
+            f"""
+<b>Natsume rule - <code>03</code></b> 
+
+__People with small d!cks and t!ts and without adminship gets banned ! __
+
+*R.I.P  ☠️ banned {mention_html(member.user.id, html.escape(member.user.first_name))} from {chat.title}*
+"""
         )
         if reason:
             reply += f"\nReason: {html.escape(reason)}"
@@ -399,7 +405,13 @@ def punch(update: Update, context: CallbackContext) -> str:
         # bot.send_sticker(chat.id, BAN_STICKER)  # banhammer marie sticker
         bot.sendMessage(
             chat.id,
-            f"{mention_html(member.user.id, html.escape(member.user.first_name))} [<code>{member.user.id}</code>] Kicked.",
+            f"""
+<b>Natsume rule - <code>02</code></b> 
+
+__People with small d!cks and t!ts and without adminship gets kicked ! __
+
+*Sayonara!! Kicked  {mention_html(member.user.id, html.escape(member.user.first_name))} from {chat.title}*
+""",
             parse_mode=ParseMode.HTML
         )
         log = (
